@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗韵学堂·六年级下册古诗词</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/home.css">
+</head>
+<body class="page-home">
+    <!-- 标题栏 -->
+    <header class="page-home-header">
+        <h1 class="page-home-title">「诗韵学堂·六年级下册古诗词」</h1>
+        <a href="record.html" class="page-home-record-link">学习记录入口</a>
+    </header>
+
+    <!-- 单元模块 -->
+    <main class="page-home-main">
+        <a href="unit.html?unit=unit1" class="unit-card">第一单元</a>
+        <a href="unit.html?unit=unit4" class="unit-card">第三单元</a>
+        <a href="unit.html?unit=recite" class="unit-card unit-card-full">古诗词诵读</a>
+    </main>
+
+    <!-- 悬浮AI助教 -->
+    <div class="ai-float-btn">AI助教</div>
+
+    <!-- 页脚 -->
+    <footer class="page-home-footer">
+    <p>义务教育教科书 语文 六年级 下册</p>
+    <p>      教育部组织编写</p>
+    <p>出版 人 民 教 育 出 版 社</p>
+</footer>
+
+    <!-- AI弹窗（先占位） -->
+    <div class="ai-dialog" id="aiDialog">
+        <div class="dialog-header">AI诗词助教</div>
+        <div class="dialog-chat"></div>
+        <div class="dialog-input-area">
+            <input type="text" placeholder="输入你的问题...">
+            <button class="base-btn">发送</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+/* 单元页标题栏 */
+.unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255,255,255,0.9);
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.unit-back-btn {
+    padding: 8px 16px;
+    border: 1px solid #a8dadc;
+    border-radius: 8px;
+    background-color: #a8dadc;
+    color: #1d3557;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.unit-back-btn:hover {
+    background-color: #89c2d9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.unit-title {
+    font-family: "KaiTi", "STKaiti", "SimSun", serif;
+    font-size: 1.6rem;
+}
+
+/* 诗词卡片列表：自适应网格，适配不同数量 */
+.unit-main {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+.poem-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* 诗词卡片样式 */
+.poem-card {
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    font-family: "KaiTi", "STKaiti", "SimSun", serif;
+    transition: all 0.3s ease;
+}
+.poem-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+.poem-title {
+    font-size: 1.4rem;
+    margin: 10px 0 5px;
+}
+.poem-author {
+    color: #666;
+    margin-bottom: 15px;
+}
+.poem-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #a8dadc;
+    color: #1d3557;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.poem-btn:hover {
+    background-color: #89c2d9;
+}

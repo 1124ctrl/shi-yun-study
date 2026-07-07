@@ -1,0 +1,96 @@
+/* 标题栏 */
+.page-home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.page-home-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: "KaiTi", "STKaiti", "SimSun", serif;
+}
+.page-home-record-link {
+    padding: 8px 18px;
+    border: 1px solid #a8dadc;
+    border-radius: 8px;
+    background-color: #a8dadc;
+    color: #1d3557;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.page-home-record-link:hover {
+    background-color: #89c2d9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 单元模块 */
+.page-home-main {
+    max-width: 760px;
+    margin: 80px auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.unit-card-full {
+    grid-column: 1 / -1;
+}
+.unit-card {
+    background-color: #fdfaf5;
+    border: 1px solid #e0d8cc;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* 字体直接加大 */
+    font-size: 1.6rem;
+    font-family: "KaiTi", "STKaiti", "SimSun", serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.unit-card:hover {
+    background-color: #e8f4ea; /* hover时底色变浅青 */
+    transform: translateY(-6px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* 页脚 */
+.page-home-footer {
+    max-width: 1000px;
+    margin: 40px auto 20px;
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.8;
+}
+
+
+.page-home-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.page-home-main {
+    background-color: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 5%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}

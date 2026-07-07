@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单元诗词列表</title>
+    <!-- 按顺序引入CSS：全局基础 → 通用组件 → 单元页专属样式 -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/unit.css">
+</head>
+<body class="page-unit">
+    <!-- 标题栏 -->
+    <header class="unit-header">
+        <a href="index.html" class="unit-back-btn">返回首页</a>
+        <h1 class="unit-title">单元诗词列表</h1>
+    </header>
+
+    <!-- 诗词卡片列表容器 -->
+    <main class="unit-main">
+        <div class="poem-list">
+            <!-- 诗词卡片会在这里动态生成 -->
+        </div>
+    </main>
+
+    <!-- 通用AI悬浮按钮（和首页共用） -->
+    <div class="ai-float-btn">AI助教</div>
+
+    <!-- 后续可以在这里加单元页专属JS -->
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+/* 通用按钮样式 */
+.base-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #a8dadc; /* 天青色 */
+    color: #1d3557;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.base-btn:hover {
+    background-color: #89c2d9;
+}
+
+/* 全局AI悬浮按钮 */
+.ai-float-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.ai-float-btn:hover {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    transform: scale(1.08); /*  hover时轻微放大 */
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+.ai-float-btn:hover {
+    background-color: #3b82f6;
+}
+
+/* AI弹窗基础样式 */
+.ai-dialog {
+    display: none;
+    position: fixed;
+    bottom: 120px;
+    right: 30px;
+    width: 350px;
+    height: 350px;
+    background: #fff;
+    border: 1px solid #333;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 998;
+}

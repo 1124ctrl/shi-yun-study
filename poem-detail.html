@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词详情</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/poem-detail.css">
+</head>
+<body class="page-poem-detail">
+    <!-- 1. 返回按钮 -->
+    <header class="poem-header">
+        <a href="javascript:history.back()" class="poem-back-btn">返回单元列表</a>
+    </header>
+
+    <main class="poem-main">
+        <!-- 2. 诗词标题区 -->
+        <section class="poem-title-section">
+            <h1 id="poemTitle">诗词标题</h1>
+            <p id="poemAuthor">作者</p>
+        </section>
+
+        <!-- 3. 原文 + 注释 并排区 -->
+        <section class="poem-content-row">
+            <div class="poem-original-box">
+                <h2>诗词原文</h2>
+                <div id="poemOriginal" class="poem-original-text">
+                    <!-- 原文将在这里渲染 -->
+                </div>
+            </div>
+            <div class="poem-notes-box">
+                <h2>字词注释</h2>
+                <ul id="poemNotesList" class="poem-notes-list">
+                    <!-- 注释列表将在这里渲染 -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. 白话译文 -->
+        <section class="poem-section poem-translation-section">
+            <h2>白话译文</h2>
+            <div id="poemTranslation" class="poem-translation-text">
+                <!-- 译文将在这里渲染 -->
+            </div>
+        </section>
+
+        <!-- 5. 创作背景 & 赏析 -->
+        <section class="poem-section poem-analysis-section">
+            <h2>创作背景与赏析</h2>
+            <div id="poemAnalysis" class="poem-analysis-text">
+                <!-- 赏析内容将在这里渲染 -->
+            </div>
+        </section>
+
+        <!-- 6. 随堂练习题 -->
+        <section class="poem-section poem-quiz-section">
+            <h2>随堂练习</h2>
+            <div id="poemQuizContainer" class="poem-quiz-container">
+                <!-- 题目将在这里渲染 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 通用AI悬浮按钮 -->
+    <div class="ai-float-btn">AI助教</div>
+
+    <!-- 后续诗词数据渲染逻辑可以写在这里 -->
+        <script>
+        // 1. 定义所有诗词的完整数据（后续可以扩展其他诗词）
+        const poemData = {
+            "han-shi": {
+                title: "寒食",
+                author: "韩翃",
+                original: `春城无处不飞花，
+寒食东风御柳斜。
+日暮汉宫传蜡烛，
+轻烟散入五侯家。`,
+                notes: [
+                    "春城：指春天的京城长安。",
+                    "寒食：古代传统节日，在清明节前一两天，习俗是禁火三天，只吃冷食。",
+                    "御柳：御苑中的柳树。",
+                    "汉宫：这里借指唐朝皇宫。",
+                    "传蜡烛：寒食节禁火，但皇宫特赐蜡烛给近臣，以示恩宠。",
+                    "五侯：指汉成帝时的五个外戚，这里泛指权贵豪门。"
+                ],
+                translation: `暮春时节，长安城处处柳絮飞舞、落红无数，寒食节的东风吹拂着皇家花园的柳枝。夜色降临，宫里忙着传赐蜡烛，袅袅轻烟散入王侯贵戚的家中。`,
+                analysis: `这首诗是唐代诗人韩翃的名作，描绘了寒食节长安城的景象，暗含对权贵特权的讽刺。前两句写春日满城飞花、东风拂柳的暮春盛景，后两句笔锋一转，写皇宫特赐蜡烛给权贵，与民间禁火形成对比，含蓄地讽刺了特权阶层的特殊待遇。全诗以景寓情，含蓄蕴藉，是咏史诗的佳作。`,
+                quiz: [
+                    {
+                        question: "《寒食》的作者是？",
+                        options: ["杜甫", "韩翃", "王建", "王维"],
+                        answer: 1
+                    }
+                ]
+            }
+        };
+
+        // 2. 页面加载后，根据URL参数渲染诗词内容
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const poemId = params.get("id");
+            if (!poemId || !poemData[poemId]) {
+                alert("未找到该诗词");
+                return;
+            }
+
+            const poem = poemData[poemId];
+
+            // 填充标题和作者
+            document.getElementById("poemTitle").textContent = poem.title;
+            document.getElementById("poemAuthor").textContent = poem.author;
+
+            // 填充原文
+            document.getElementById("poemOriginal").textContent = poem.original;
+
+            // 填充注释
+            const notesList = document.getElementById("poemNotesList");
+            notesList.innerHTML = "";
+            poem.notes.forEach(note => {
+                const li = document.createElement("li");
+                li.textContent = note;
+                notesList.appendChild(li);
+            });
+
+            // 填充译文
+            document.getElementById("poemTranslation").textContent = poem.translation;
+
+            // 填充赏析
+            document.getElementById("poemAnalysis").textContent = poem.analysis;
+
+            // 渲染随堂练习
+            renderQuiz(poem.quiz);
+        });
+
+        // 3. 渲染随堂练习题
+        function renderQuiz(quizList) {
+            const container = document.getElementById("poemQuizContainer");
+            container.innerHTML = "";
+
+            quizList.forEach((q, index) => {
+                const quizDiv = document.createElement("div");
+                quizDiv.className = "quiz-item";
+                quizDiv.innerHTML = `
+                    <p class="quiz-question">${index + 1}. ${q.question}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, i) => `
+                            <label class="quiz-option">
+                                <input type="radio" name="quiz${index}" value="${i}">
+                                ${opt}
+                            </label>
+                        `).join("")}
+                    </div>
+                `;
+                container.appendChild(quizDiv);
+            });
+
+            // 添加提交按钮
+            const submitBtn = document.createElement("button");
+            submitBtn.className = "quiz-submit-btn";
+            submitBtn.textContent = "提交答案";
+            submitBtn.onclick = checkAnswers;
+            container.appendChild(submitBtn);
+
+            // 答案反馈区域
+            const feedbackDiv = document.createElement("div");
+            feedbackDiv.id = "quizFeedback";
+            feedbackDiv.className = "quiz-feedback";
+            container.appendChild(feedbackDiv);
+        }
+
+        // 4. 检查答案并给出反馈
+        function checkAnswers() {
+            const feedbackDiv = document.getElementById("quizFeedback");
+            feedbackDiv.innerHTML = "";
+            let score = 0;
+            let correctCount = 0;
+
+            const poemId = new URLSearchParams(window.location.search).get("id");
+            const quizList = poemData[poemId].quiz;
+
+            quizList.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="quiz${index}"]:checked`);
+                if (selected && parseInt(selected.value) === q.answer) {
+                    correctCount++;
+                }
+            });
+
+            score = Math.round((correctCount / quizList.length) * 100);
+            feedbackDiv.innerHTML = `
+                <p>你的得分：${score}分</p>
+                <p>正确答案：${quizList.map(q => q.options[q.answer]).join("、")}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
