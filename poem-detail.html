@@ -60,6 +60,18 @@
                 <!-- 题目将在这里渲染 -->
             </div>
         </section>
+
+        <!-- AI 诗词答疑区域 -->
+        <section class="poem-section ai-section">
+            <div class="ai-box">
+                <h2>AI 诗词助教</h2>
+                <textarea id="ai-input" placeholder="输入你想问的诗词问题，比如：这句诗是什么意思？" rows="3"></textarea>
+                <button id="ai-btn">提问</button>
+                <div id="ai-result" class="ai-result"></div>
+            </div>
+        </section>
+
+
     </main>
 
     <!-- 通用AI悬浮按钮 -->
@@ -73,7 +85,7 @@
             if (!poemId) {
                 alert("未找到诗词参数");
                 return;
-             }
+            }
 
             try {
                 // 从本地 JSON 文件加载数据
@@ -86,6 +98,8 @@
                 }
 
                 const poem = poemData[poemId];
+                // 1. 在这里声明 currentPoem，作用域覆盖整个回调
+                let currentPoem = poem;
 
                 // 渲染标题、作者
                 document.getElementById("poemTitle").textContent = poem.title;
@@ -109,6 +123,43 @@
 
                 // 渲染随堂练习
                 renderQuiz(poem.quiz);
+
+                // 2. 在这里直接添加 AI 提问逻辑，这样就能访问到 currentPoem 了
+                const AI_API = "https://poem-ai-eight.vercel.app/api/ai";
+                document.getElementById("ai-btn").addEventListener("click", async () => {
+                    const input = document.getElementById("ai-input");
+                    const resultBox = document.getElementById("ai-result");
+                    const question = input.value.trim();
+
+                    if (!question) {
+                        resultBox.innerText = "请输入问题！";
+                        return;
+                    }
+
+                    resultBox.innerText = "AI 正在思考中...";
+
+                    try {
+                        const res = await fetch(AI_API, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                question: question,
+                                poem: currentPoem
+                            })
+                        });
+
+                        const data = await res.json();
+                        const answer = data.choices[0].message.content;
+                        resultBox.innerText = answer;
+
+                    } catch (e) {
+                        resultBox.innerText = "请求失败，请稍后重试";
+                        console.error("AI 请求错误:", e);
+                    }
+                });
+
             } catch (err) {
                 alert("加载诗词数据失败");
                 console.error(err);

@@ -33,14 +33,133 @@
 </footer>
 
     <!-- AI弹窗（先占位） -->
-    <div class="ai-dialog" id="aiDialog">
-        <div class="dialog-header">AI诗词助教</div>
-        <div class="dialog-chat"></div>
-        <div class="dialog-input-area">
-            <input type="text" placeholder="输入你的问题...">
-            <button class="base-btn">发送</button>
-        </div>
+    <!-- 1. 全局悬浮AI按钮 -->
+    <div class="ai-float-btn" id="aiFloatBtn">AI助教</div>
+
+    <!-- 2. 统一AI弹窗（默认隐藏） -->
+    <div class="ai-modal" id="aiModal">
+    <div class="ai-modal-header">
+        <span>AI 诗词助教</span>
+        <button id="clearChatBtn">清空对话</button>
     </div>
+    <div class="ai-chat-area" id="aiChatArea">
+        <div class="welcome-message">你好！我是诗韵学堂的AI助教，有什么诗词问题都可以问我~</div>
+    </div>
+    <div class="ai-input-area">
+        <input type="text" id="aiInput" placeholder="输入你的问题...">
+        <button id="sendBtn">发送</button>
+    </div>
+    </div>
+
+    <!-- 3. 简单样式 -->
+    <style>
+    .ai-float-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    z-index: 999;
+    font-size: 16px;
+    }
+
+    .ai-modal {
+    position: fixed;
+    bottom: 120px;
+    right: 24px;
+    width: 400px;
+    max-width: 90vw;
+    height: 550px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+    }
+
+    .ai-modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    }
+
+    #clearChatBtn {
+    background: #f0f0f0;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    }
+
+    .ai-chat-area {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background: #fafafa;
+    }
+
+    .welcome-message {
+    color: #666;
+    margin-bottom: 16px;
+    }
+
+    .user-bubble, .ai-bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    }
+
+    .user-bubble {
+    background: #667eea;
+    color: white;
+    margin-left: auto;
+    }
+
+    .ai-bubble {
+    background: white;
+    border: 1px solid #eee;
+    margin-right: auto;
+    }
+
+    .ai-input-area {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #eee;
+    }
+
+    #aiInput {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    }
+
+    #sendBtn {
+    margin-left: 8px;
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    }
+    </style>
 
     <script src="main.js"></script>
 </body>
