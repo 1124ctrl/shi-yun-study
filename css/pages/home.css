@@ -1,5 +1,6 @@
 /* 标题栏 */
 .page-home-header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -9,19 +10,24 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .page-home-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin:0;
     font-size: 1.8rem;
     font-weight: bold;
     font-family: "KaiTi", "STKaiti", "SimSun", serif;
 }
 .page-home-record-link {
-    padding: 8px 18px;
-    border: 1px solid #a8dadc;
-    border-radius: 8px;
-    background-color: #a8dadc;
-    color: #1d3557;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
+    margin-left: auto;
+    padding:8px 16px;
+    border-radius:8px;
+    background:#a8dadc;
+    color:#1d3557;
+    text-decoration:none;
+    font-family: "KaiTi", "STKaiti", serif;
+    transition:0.3s;
+    }
 .page-home-record-link:hover {
     background-color: #89c2d9;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);

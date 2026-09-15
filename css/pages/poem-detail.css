@@ -160,3 +160,20 @@
     white-space: pre-line;
     line-height: 1.6;
 }
+.ai-quick-buttons {
+  display: flex;
+  gap:8px;
+  padding:8px 12px;
+  flex-wrap:wrap;
+}
+.quick-btn {
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid #a8dadc;
+  background:#f1faee;
+  color:#1d3557;
+  cursor:pointer;
+}
+.quick-btn:hover {
+  background:#a8dadc;
+}

@@ -1,100 +1,126 @@
-// 1. 定义所有单元的诗词数据
-const unitData = {
-    //第一单元 古诗三首
-    unit1: [
-        {
-            title: "寒食",
-            author: "韩翃",
-            poemId: "han-shi" // 用来对应诗词详情页的id
-        },
-        {
-            title: "迢迢牵牛星",
-            author: "佚名",
-            poemId: "tiao-tiao-qian-niu-xing"
-        },
-        {
-            title: "十五夜望月",
-            author: "王建",
-            poemId: "shi-wu-ye-wang-yue"
-        }
-    ],
-    // 第四单元 古诗三首
-    unit4: [
-        {
-            title: "马诗",
-            author: "李贺",
-            poemId: "ma-shi"
-        },
-        {
-            title: "石灰吟",
-            author: "于谦",
-            poemId: "shi-hui-yin"
-        },
-        {
-            title: "竹石",
-            author: "郑燮",
-            poemId: "zhu-shi"
-        }
-    ],
-    // 古诗词诵读 10首
-    recite: [
-        { title: "采薇（节选）", author: "佚名", poemId: "cai-wei" },
-        { title: "送元二使安西", author: "王维", poemId: "song-yuan-er-shi-an-xi" },
-        { title: "春夜喜雨", author: "杜甫", poemId: "chun-ye-xi-yu" },
-        { title: "早春呈水部张十八员外", author: "韩愈", poemId: "zao-chun-cheng-shui-bu" },
-        { title: "江上渔者", author: "范仲淹", poemId: "jiang-shang-yu-zhe" },
-        { title: "泊船瓜洲", author: "王安石", poemId: "bo-chuan-gua-zhou" },
-        { title: "游园不值", author: "叶绍翁", poemId: "you-yuan-bu-zhi" },
-        { title: "卜算子·送鲍浩然之浙东", author: "王观", poemId: "bu-suan-zi-song-bao-hao-ran" },
-        { title: "浣溪沙", author: "苏轼", poemId: "huan-xi-sha" },
-        { title: "清平乐", author: "黄庭坚", poemId: "qing-ping-le" }
-    ]
-};
+const AI_API = "https://1488686992-4r22xo8gxl.ap-guangzhou.tencentscf.com";
 
-// 2. 渲染诗词卡片的通用函数
-function renderPoemList(unitKey) {
-    const poems = unitData[unitKey];
-    const listEl = document.querySelector(".poem-list");
-    const titleEl = document.querySelector(".unit-title");
+document.addEventListener('DOMContentLoaded', async () => {
+    const aiModal = document.getElementById('aiModal');
+    const aiFloatBtn = document.getElementById('aiFloatBtn');
+    const aiChatArea = document.getElementById('aiChatArea');
+    const aiInput = document.getElementById('aiInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearChatBtn = document.getElementById('clearChatBtn');
 
-    // 根据单元key修改标题
-    const unitNames = {
-        unit1: "第一单元",
-        unit4: "第四单元",
-        recite: "古诗词诵读"
-    };
-    titleEl.textContent = `${unitNames[unitKey]} 诗词列表`;
-
-    // 清空并生成卡片
-    listEl.innerHTML = "";
-    poems.forEach(poem => {
-        const card = document.createElement("div");
-        card.className = "poem-card";
-        card.innerHTML = `
-            <div class="poem-cover"></div>
-            <h3 class="poem-title">${poem.title}</h3>
-            <p class="poem-author">${poem.author}</p>
-            <a href="poem-detail.html?id=${poem.poemId}" class="poem-btn">进入学习</a>
-        `;
-        listEl.appendChild(card);
+    // 打开/关闭弹窗
+    aiFloatBtn.addEventListener('click', () => {
+        aiModal.style.display = aiModal.style.display === 'flex' ? 'none' : 'flex';
     });
-}
 
-// 3. 页面加载时，根据URL参数渲染对应单元的诗词
-document.addEventListener("DOMContentLoaded", () => {
-    const params = new URLSearchParams(window.location.search);
-    const unit = params.get("unit");
-    if (unit && unitData[unit]) {
-        renderPoemList(unit);
+    // 清空对话
+    clearChatBtn.addEventListener('click', () => {
+        aiChatArea.innerHTML = `<div class="welcome-message">你好！我是诗韵学堂的AI助教，有什么诗词问题都可以问我~</div>`;
+    });
+
+    // 快捷提问点击
+    document.querySelectorAll('.quick-btn').forEach(btn=>{
+    btn.onclick = function(){
+        const prompt = this.dataset.prompt;
+        aiInput.value = prompt;
+        sendMessage();
     }
-});
+    })
 
-// 4. 保留AI按钮的交互逻辑
-const aiBtn = document.querySelector('.ai-float-btn');
-const aiDialog = document.getElementById('aiDialog');
+    // 打字机输出函数
+        function typeWrite(element, text, speed = 30) {
+        let i = 0;
+        element.textContent = "";
+        const timer = setInterval(() => {
+            if (i >= text.length) {
+            clearInterval(timer);
+            return;
+            }
+            element.textContent += text.charAt(i);
+            i++;
+            aiChatArea.scrollTop = aiChatArea.scrollHeight;
+        }, speed);
+        }
 
-if (aiBtn && aiDialog) {
-    aiBtn.addEventListener('click', () => {
-        aiDialog.style.display = aiDialog.style.display === 'block' ? 'none' : 'block';
+    // 发送消息
+    async function sendMessage() {
+        const question = aiInput.value.trim();
+        if (!question) return;
+        aiInput.value = "";
+        // 用户气泡
+        const userBubble = document.createElement('div');
+        userBubble.className = 'user-bubble';
+        userBubble.textContent = question;
+        aiChatArea.appendChild(userBubble);
+        // 加载提示
+        const aiLoading = document.createElement('div');
+        aiLoading.className = 'ai-bubble';
+        aiLoading.textContent = "AI正在思考中...";
+        aiChatArea.appendChild(aiLoading);
+        aiChatArea.scrollTop = aiChatArea.scrollHeight;
+        try {
+            const res = await fetch(AI_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    question: question,
+                    poem: null
+                })
+            });
+            const data = await res.json();
+            // ========== 校验返回数据 ==========
+            if (data.choices && Array.isArray(data.choices) && data.choices.length > 0) {
+                const answer = data.choices[0].message.content;
+                aiLoading.remove();
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'ai-bubble';
+                aiChatArea.appendChild(aiBubble);
+                typeWrite(aiBubble, answer);
+            } else if(data.msg) {
+                aiLoading.textContent = data.msg;
+            } else {
+                aiLoading.textContent = "AI返回数据异常";
+                console.log("后端返回数据：", data);
+            }
+        } catch (err) {
+            aiLoading.textContent = "请求失败，请稍后重试";
+            console.error(err);
+        }
+        aiChatArea.scrollTop = aiChatArea.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    aiInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendMessage();
     });
-}
+
+    function recordLearn(unitName){
+    const data = JSON.parse(sessionStorage.getItem("poemRecord") || JSON.stringify({
+        units: [
+        { name: "第一单元", learned: 0, total: 3 },
+        { name: "第三单元", learned: 0, total: 3 },
+        { name: "古诗词诵读", learned: 0, total: 10 }
+        ],
+        errorList: []
+    }));
+    const target = data.units.find(u=>u.name === unitName);
+    if(target && target.learned < target.total){
+        target.learned += 1;
+        sessionStorage.setItem("poemRecord", JSON.stringify(data));
+    }
+    }
+
+    function addErrorItem(questionInfo){
+    const data = JSON.parse(sessionStorage.getItem("poemRecord") || JSON.stringify({
+        units: [
+        { name: "第一单元", learned: 0, total: 3 },
+        { name: "第三单元", learned: 0, total: 3 },
+        { name: "古诗词诵读", learned: 0, total: 10 }
+        ],
+        errorList: []
+    }));
+    data.errorList.push(questionInfo);
+    sessionStorage.setItem("poemRecord", JSON.stringify(data));
+    }
+
+});
