@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词详情</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/poem-detail.css">
+</head>
+<body class="page-poem-detail">
+    <!-- 1. 返回按钮 -->
+    <header class="poem-header">
+        <a href="javascript:history.back()" class="poem-back-btn">返回单元列表</a>
+    </header>
+
+    <main class="poem-main">
+        <!-- 2. 诗词标题区 -->
+        <section class="poem-title-section">
+            <h1 id="poemTitle">诗词标题</h1>
+            <p id="poemAuthor">作者</p>
+        </section>
+
+        <!-- 3. 原文 + 注释 并排区 -->
+        <section class="poem-content-row">
+            <div class="poem-original-box">
+                <h2>诗词原文</h2>
+                <div id="poemOriginal" class="poem-original-text">
+                    <!-- 原文将在这里渲染 -->
+                </div>
+            </div>
+            <div class="poem-notes-box">
+                <h2>字词注释</h2>
+                <ul id="poemNotesList" class="poem-notes-list">
+                    <!-- 注释列表将在这里渲染 -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. 白话译文 -->
+        <section class="poem-section poem-translation-section">
+            <h2>白话译文</h2>
+            <div id="poemTranslation" class="poem-translation-text">
+                <!-- 译文将在这里渲染 -->
+            </div>
+        </section>
+
+        <!-- 5. 创作背景 & 赏析 -->
+        <section class="poem-section poem-analysis-section">
+            <h2>创作背景与赏析</h2>
+            <div id="poemAnalysis" class="poem-analysis-text">
+                <!-- 赏析内容将在这里渲染 -->
+            </div>
+        </section>
+
+        <!-- 6. 随堂练习题 -->
+        <section class="poem-section poem-quiz-section">
+            <h2>随堂练习</h2>
+            <div id="poemQuizContainer" class="poem-quiz-container">
+                <!-- 题目将在这里渲染 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 全局悬浮AI按钮 + 弹窗 -->
+    <div class="ai-float-btn" id="aiFloatBtn">AI助教</div>
+    <div class="ai-modal" id="aiModal">
+
+        <div class="ai-modal-header">
+            <span>AI 诗词助教</span>
+            <button id="clearChatBtn">清空对话</button>
+        </div>
+
+        <div class="ai-chat-area" id="aiChatArea">
+            <div class="welcome-message">你好！我是诗韵学堂的AI助教，有什么诗词问题都可以问我~</div>
+        </div>
+
+        <div class="ai-quick-buttons">
+            <button class="quick-btn" data-prompt="翻译这首诗">翻译全诗</button>
+            <button class="quick-btn" data-prompt="赏析这首诗">赏析全诗</button>
+            <button class="quick-btn" data-prompt="解释重点字词">字词讲解</button>
+        </div>
+
+        <div class="ai-input-area">
+            <input type="text" id="aiInput" placeholder="输入你的问题...">
+            <button id="sendBtn">发送</button>
+        </div>
+    </div>
+
+    <!-- AI 样式 -->
+    <style>
+        .ai-float-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            z-index: 999;
+            font-size: 16px;
+        }
+
+        .ai-modal {
+            position: fixed;
+            bottom: 120px;
+            right: 24px;
+            width: 400px;
+            max-width: 90vw;
+            height: 550px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .ai-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        #clearChatBtn {
+            background: #f0f0f0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .ai-chat-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .welcome-message {
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .user-bubble, .ai-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .user-bubble {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+        }
+
+        .ai-bubble {
+            background: white;
+            border: 1px solid #eee;
+            margin-right: auto;
+        }
+
+        .ai-input-area {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        #aiInput {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #sendBtn {
+            margin-left: 8px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            // ========== AI DOM & 配置 ==========
+            const aiModal = document.getElementById('aiModal');
+            const aiFloatBtn = document.getElementById('aiFloatBtn');
+            const aiChatArea = document.getElementById('aiChatArea');
+            const aiInput = document.getElementById('aiInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const clearChatBtn = document.getElementById('clearChatBtn');
+            const AI_API = "https://1488686992-4r22xo8gxl.ap-guangzhou.tencentscf.com";
+            let currentPoem = null;
+
+            function simpleMdToHtml(text){
+                let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                // 合并连续空行，避免大片空白
+                html = html.replace(/\n\s*\n/g, '<br><br>');
+                html = html.replace(/\n/g, '<br>');
+                return html;
+            }
+
+            //打字机函数
+            function typeWrite(element, text, speed = 30) {
+                let i = 0;
+                element.textContent = "";
+                const timer = setInterval(() => {
+                    if (i >= text.length) {
+                        clearInterval(timer);
+                        return;
+                    }
+                    element.textContent += text.charAt(i);
+                    i++;
+                    aiChatArea.scrollTop = aiChatArea.scrollHeight;
+                }, speed);
+            }
+
+            //快捷提问按钮事件绑定
+            document.querySelectorAll('.quick-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const prompt = this.dataset.prompt;
+                    aiInput.value = prompt;
+                    sendMessage();
+                })
+            })
+
+            // 打开/关闭弹窗
+            aiFloatBtn.addEventListener('click', () => {
+                aiModal.style.display = aiModal.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            // 清空对话
+            clearChatBtn.addEventListener('click', () => {
+                aiChatArea.innerHTML = `<div class="welcome-message">你好！我是诗韵学堂的AI助教，有什么诗词问题都可以问我~</div>`;
+            });
+
+
+            async function sendMessage() {
+                const question = aiInput.value.trim();
+                if (!question) return;
+                aiInput.value = "";
+                // 用户消息气泡
+                const userBubble = document.createElement('div');
+                userBubble.className = 'user-bubble';
+                userBubble.textContent = question;
+                aiChatArea.appendChild(userBubble);
+                // 加载提示
+                const aiLoading = document.createElement('div');
+                aiLoading.className = 'ai-bubble';
+                aiLoading.textContent = "AI正在思考中...";
+                aiChatArea.appendChild(aiLoading);
+                aiChatArea.scrollTop = aiChatArea.scrollHeight;
+
+                // 增加超时控制
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 12000);
+
+                try {
+                    const res = await fetch(AI_API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        question: question,
+                        poem: currentPoem
+                    }),
+                    signal: controller.signal
+                    });
+                    clearTimeout(timer);
+
+                    // 判断接口是否返回成功
+                    if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`服务端错误：${res.status}, ${errText}`);
+                    }
+                    const data = await res.json();
+                    const answer = data.choices[0].message.content;
+                    aiLoading.remove();
+                    const aiBubble = document.createElement('div');
+                    aiBubble.className = 'ai-bubble';
+                    aiChatArea.appendChild(aiBubble);
+                    aiBubble.innerHTML = simpleMdToHtml(answer);
+                } catch (err) {
+                    clearTimeout(timer);
+                    aiLoading.textContent = "请求失败，请稍后重试";
+                    console.error("AI请求异常：", err);
+                }
+                aiChatArea.scrollTop = aiChatArea.scrollHeight;
+            }
+
+
+
+            // 绑定发送、回车事件
+            sendBtn.addEventListener('click', sendMessage);
+            aiInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+
+            const params = new URLSearchParams(window.location.search);
+            const poemId = params.get("id");
+            if (!poemId) {
+                alert("未找到诗词参数");
+                return;
+            }
+
+            try {
+                const res = await fetch("poems.json");
+                const poemData = await res.json();
+
+                if (!poemData[poemId]) {
+                    alert("未找到该诗词");
+                    return;
+                }
+
+                currentPoem = poemData[poemId];
+
+                // 渲染标题、作者
+                document.getElementById("poemTitle").textContent = currentPoem.title;
+                document.getElementById("poemAuthor").textContent = currentPoem.author;
+
+                // 渲染原文
+                document.getElementById("poemOriginal").textContent = currentPoem.original;
+
+                // 渲染注释
+                const notesList = document.getElementById("poemNotesList");
+                notesList.innerHTML = "";
+                currentPoem.notes.forEach(note => {
+                    const li = document.createElement("li");
+                    li.textContent = note;
+                    notesList.appendChild(li);
+                });
+
+                // 渲染译文、赏析
+                document.getElementById("poemTranslation").textContent = currentPoem.translation;
+                document.getElementById("poemAnalysis").textContent = currentPoem.analysis;
+
+                // 渲染随堂练习
+                renderQuiz(currentPoem.quiz);
+
+            } catch (err) {
+                alert("加载诗词数据失败");
+                console.error(err);
+            }
+        });
+
+        // 渲染题目和提交功能
+        function renderQuiz(quizList) {
+            const container = document.getElementById("poemQuizContainer");
+            container.innerHTML = "";
+
+            quizList.forEach((q, index) => {
+                const quizDiv = document.createElement("div");
+                quizDiv.className = "quiz-item";
+                quizDiv.innerHTML = `
+                    <p class="quiz-question">${index + 1}. ${q.question}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, i) => `
+                            <label class="quiz-option">
+                                <input type="radio" name="quiz${index}" value="${i}">
+                                ${opt}
+                            </label>
+                        `).join("")}
+                    </div>
+                `;
+                container.appendChild(quizDiv);
+            });
+
+            const submitBtn = document.createElement("button");
+            submitBtn.className = "quiz-submit-btn";
+            submitBtn.textContent = "提交答案";
+            submitBtn.onclick = checkAnswers;
+            container.appendChild(submitBtn);
+
+            const feedbackDiv = document.createElement("div");
+            feedbackDiv.id = "quizFeedback";
+            feedbackDiv.className = "quiz-feedback";
+            container.appendChild(feedbackDiv);
+        }
+
+        // 判分功能
+        function checkAnswers() {
+            const feedbackDiv = document.getElementById("quizFeedback");
+            feedbackDiv.innerHTML = "";
+            let correctCount = 0;
+
+            const params = new URLSearchParams(window.location.search);
+            const poemId = params.get("id");
+
+            fetch("poems.json")
+                .then(res => res.json())
+                .then(poemData => {
+                    const quizList = poemData[poemId].quiz;
+                    const poemUnit = poemData[poemId].unit;
+                    quizList.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="quiz${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) {
+                            correctCount++;
+                        }
+                    });
+
+                    const score = Math.round((correctCount / quizList.length) * 100);
+                    feedbackDiv.innerHTML = `
+                        <p>你的得分：${score}分</p>
+                        <p>正确答案：${quizList.map(q => q.options[q.answer]).join("、")}</p>
+                    `;
+
+                    // 标记该诗词完成学习
+                    let finishedPoems = JSON.parse(sessionStorage.getItem("finishedPoems") || "[]");
+                    if (!finishedPoems.includes(poemId)) {
+                        recordLearn(poemUnit);
+                        finishedPoems.push(poemId);
+                        sessionStorage.setItem("finishedPoems", JSON.stringify(finishedPoems));
+                    }
+
+                    // 收集错题：遍历题目，如果答错，加入错题本
+                    quizList.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="quiz${index}"]:checked`);
+                        const userSelect = selected ? parseInt(selected.value) : null;
+                        if (userSelect !== q.answer) {
+                            // 获取正确答案文本
+                            const rightAnswer = q.options[q.answer];
+                            // 唯一key：诗词id + 题目，用来判断题目是否已经在错题库，实现去重
+                            const uniqueKey = poemId + "|" + q.question;
+                            addErrorItem({
+                                uniqueKey: uniqueKey,
+                                title: `${poemData[poemId].title}：${q.question}`,
+                                answer: rightAnswer
+                            });
+                        }
+                    });
+                });
+        }
+
+        function recordLearn(unitName){
+            const data = JSON.parse(sessionStorage.getItem("poemRecord") || JSON.stringify({
+                units: [
+                { name: "第一单元", learned: 0, total: 3 },
+                { name: "第三单元", learned: 0, total: 3 },
+                { name: "古诗词朗诵", learned: 0, total: 10 }
+                ],
+                errorList: []
+            }));
+            const target = data.units.find(u=>u.name === unitName);
+            if(target && target.learned < target.total){
+                target.learned += 1;
+                sessionStorage.setItem("poemRecord", JSON.stringify(data));
+            }
+        }
+
+        function addErrorItem(questionInfo){
+            const data = JSON.parse(sessionStorage.getItem("poemRecord") || JSON.stringify({
+                units: [
+                { name: "第一单元", learned: 0, total: 3 },
+                { name: "第三单元", learned: 0, total: 3 },
+                { name: "古诗词朗诵", learned: 0, total: 10 }
+                ],
+                errorList: []
+            }));
+            // 去重：判断uniqueKey是否已经存在
+            const existed = data.errorList.some(item => item.uniqueKey === questionInfo.uniqueKey);
+            if(!existed){
+                data.errorList.push(questionInfo);
+            }
+            sessionStorage.setItem("poemRecord", JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
