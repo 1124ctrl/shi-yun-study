@@ -81,7 +81,24 @@
     color: #666;
     line-height: 1.8;
 }
-
+.footer-links a{
+  color:#444;
+  text-decoration:none;
+  margin:0 8px;
+}
+.footer-desc h4{
+  margin:12px 0 8px;
+  font-weight:normal;
+}
+.tip{
+  color:#777;
+  font-size:13px;
+}
+.footer-copyright{
+  margin-top:16px;
+  font-size:12px;
+  color:#666;
+}
 
 .page-home-container {
     width: 90%;
@@ -100,3 +117,4 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
 }
+
