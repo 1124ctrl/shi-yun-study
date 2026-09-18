@@ -20,6 +20,8 @@
             <h1 id="poemTitle">诗词标题</h1>
             <p id="poemAuthor">作者</p>
         </section>
+        <button id="audioBtn" style="padding:8px 16px;font-size:16px;border-radius:8px;cursor:pointer;border:1px solid #ccc;background:#fff;margin-bottom:12px;display:none;">🔊 诵读</button>
+        <audio id="poemAudio"></audio>
 
         <!-- 3. 原文 + 注释 并排区 -->
         <section class="poem-content-row">
@@ -41,7 +43,7 @@
         <section class="poem-section poem-translation-section">
             <h2>白话译文</h2>
             <div id="poemTranslation" class="poem-translation-text">
-                <!-- 译文将在这里渲染 -->
+                <!-- 译文渲染 -->
             </div>
         </section>
 
@@ -49,7 +51,7 @@
         <section class="poem-section poem-analysis-section">
             <h2>创作背景与赏析</h2>
             <div id="poemAnalysis" class="poem-analysis-text">
-                <!-- 赏析内容将在这里渲染 -->
+                <!-- 赏析内容渲染 -->
             </div>
         </section>
 
@@ -57,7 +59,7 @@
         <section class="poem-section poem-quiz-section">
             <h2>随堂练习</h2>
             <div id="poemQuizContainer" class="poem-quiz-container">
-                <!-- 题目将在这里渲染 -->
+                <!-- 题目渲染 -->
             </div>
         </section>
     </main>
@@ -330,6 +332,29 @@
                 }
 
                 currentPoem = poemData[poemId];
+
+                const audioBtn = document.getElementById('audioBtn');
+                const poemAudio = document.getElementById('poemAudio');
+                if(currentPoem.audioFile){
+                    audioBtn.style.display = 'block';
+                    poemAudio.src = currentPoem.audioFile;
+                    poemAudio.load();
+
+                    audioBtn.onclick = function(){
+                        if(poemAudio.paused){
+                            poemAudio.play();
+                            audioBtn.innerText="⏹ 停止诵读";
+                        }else{
+                            poemAudio.pause();
+                            audioBtn.innerText="🔊 诵读";
+                        }
+                    }
+                    poemAudio.onended = function(){
+                        audioBtn.innerText="🔊 诵读";
+                    }
+                }else{
+                    audioBtn.style.display = 'none';
+                }
 
                 // 渲染标题、作者
                 document.getElementById("poemTitle").textContent = currentPoem.title;
